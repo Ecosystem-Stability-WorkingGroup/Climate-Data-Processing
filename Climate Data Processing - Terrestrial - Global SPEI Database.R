@@ -6,20 +6,12 @@
 
 ############################################################
 # Load Packages
-library(raster)
-library(sf)
-library(tidyverse)
-library(terra)
-library(fs)
-library(httr)
-library(rvest)
-library(ncdf4)
-library(progress)
+librarian::shelf(raster, sf, tidyverse, terra, fs, httr, rvest, ncdf4, progress, here)
 
 ############################################################
 # Initial Dataframes - All Sites with Standardized IDs
 
-all.climate.terr.sites<-read.csv("C:/Users/rfidler/Desktop/Powell Ecosystem Stability/Data/All Sites - Data Harmonization/STD_ID Full Lists/all.climate.terr.sites.csv")
+all.climate.terr.sites<-read.csv(here("Data" , "All Sites - Data Harmonization" , "STD_ID Full Lists" , "all.climate.terr.sites.csv"))
 
 #Remove FIA Data Until Site Crosscheck
 all.climate.terr.sites<-all.climate.terr.sites%>%     
@@ -44,7 +36,7 @@ spei.climate.dat<-all.climate.terr.sites
 # Set NetCDF Location
 
 # Open the NetCDF file
-nc_file <- ncdf4::nc_open("C:/Users/rfidler/Desktop/Powell Ecosystem Stability/Data/Climate Data/Global SPEI Database/spei01.nc")
+nc_file <- ncdf4::nc_open(here("Data", "Climate Data", "Global SPEI Database/spei01.nc"))
 
 ############################################################
 # Pulling Data from NetCDF
