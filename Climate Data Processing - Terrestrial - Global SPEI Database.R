@@ -11,7 +11,7 @@ librarian::shelf(raster, sf, tidyverse, terra, fs, httr, rvest, ncdf4, progress,
 ############################################################
 # Initial Dataframes - All Sites with Standardized IDs
 
-all.climate.terr.sites<-read.csv(here("Data" , "All Sites - Data Harmonization" , "STD_ID Full Lists" , "all.climate.terr.sites.csv"))
+all.climate.terr.sites<-read.csv(here("Data" , "Climate_data" , "all.climate.terr.sites.csv"))
 
 #Remove FIA Data Until Site Crosscheck
 all.climate.terr.sites<-all.climate.terr.sites%>%     
@@ -36,7 +36,7 @@ spei.climate.dat<-all.climate.terr.sites
 # Set NetCDF Location
 
 # Open the NetCDF file
-nc_file <- ncdf4::nc_open(here("Data", "Climate Data", "Global SPEI Database/spei01.nc"))
+nc_file <- ncdf4::nc_open(here("Data", "Climate_data", "Global SPEI Database", "spei01.nc"))
 
 ############################################################
 # Pulling Data from NetCDF
