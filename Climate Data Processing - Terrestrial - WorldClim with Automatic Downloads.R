@@ -1,7 +1,8 @@
 ###### BEFORE RUNNING #########
 
 # - Line 13: Set path to terrestrial site data
-# - Lines 361-370: Set working directory to file save location, remove "#" from write.csv code lines
+# - Line 145: Set path to location to download WorldClim files to locallly
+# - Lines 373-382: Set working directory to file save location, remove "#" from write.csv code lines
 
 ############################################################
 # Load Packages
@@ -43,22 +44,26 @@ extract_data_from_tiff <- function(tiff_file, climate_df) {
   return(extracted_values)
 }
 
-############################################################
-# Define the function to process each zip file
-process_zip_file <- function(zip_url, climate_df) {
-  # Create a temporary file
-  temp_zip <- tempfile(fileext = ".zip")
+# Define the function to process each zip file and save it locally
+process_zip_file <- function(zip_url, climate_df, local_dir) {
+  # Create the local file path
+  zip_name <- basename(zip_url)
+  local_zip <- file.path(local_dir, zip_name)
   
-  # Download the zip file
-  download.file(zip_url, temp_zip, mode = "wb")
+  # Download the zip file to the local directory if not already downloaded
+  if (!file.exists(local_zip)) {
+    download.file(zip_url, local_zip, mode = "wb")
+  } else {
+    message(paste("File already downloaded:", local_zip))
+  }
   
   # Unzip the contents
-  unzip(temp_zip, exdir = "temp")
+  unzip(local_zip, exdir = local_dir)
   
-  # List all geoTIFF files in the temp directory
-  tiff_files <- list.files("temp", pattern = "\\.tif$", full.names = TRUE)
+  # List all geoTIFF files in the local directory
+  tiff_files <- list.files(local_dir, pattern = "\\.tif$", full.names = TRUE)
   
-  # Create an empty list to store the results
+  # Create an empty list to store the results for this ZIP file
   results_list <- list()
   
   # Loop through each tiff file
@@ -74,22 +79,19 @@ process_zip_file <- function(zip_url, climate_df) {
     results_list[[column_name]] <- extracted_data
   }
   
-  # Remove the temp directory and temporary file
-  unlink("temp", recursive = TRUE)
-  unlink(temp_zip)
-  
-  # Combine the results into a dataframe
+  # Combine the results into a dataframe specific to this ZIP file
   results_df <- as.data.frame(results_list)
   
-  # Combine with the original climate data
+  # Combine with the original climate data, ensuring it's only for this ZIP
   combined_df <- cbind(climate_df, results_df)
+  
+  # Clean up the local directory to prevent carry-over of files between iterations
+  unlink(tiff_files)
   
   return(combined_df)
 }
-
 ############################################################
-# Define the list of base URLs and file names
-
+# Define the list of base URLs and file names (unchanged from your original code)
 base_urls <- list(
   "https://geodata.ucdavis.edu/climate/worldclim/2_1/base/",
   "https://geodata.ucdavis.edu/climate/worldclim/2_1/hist/cts4.06/2.5m/"
@@ -107,7 +109,7 @@ file_names_base  <- c(
   "wc2.1_30s_elev.zip"
 )
 
-file_names_hist<-c(
+file_names_hist <- c(
   "wc2.1_cruts4.06_2.5m_prec_1960-1969.zip",
   "wc2.1_cruts4.06_2.5m_prec_1970-1979.zip",
   "wc2.1_cruts4.06_2.5m_prec_1980-1989.zip",
@@ -138,6 +140,15 @@ zip_urls <- c(
 )
 
 ############################################################
+# Define the local directory where files will be saved
+local_dir <- "C:/Users/rfidler/Desktop/temp_test"
+
+# Create the directory if it doesn't exist
+if (!dir.exists(local_dir)) {
+  dir.create(local_dir, recursive = TRUE)
+}
+
+############################################################
 # Create an empty list to store the results
 final_results <- list()
 
@@ -146,7 +157,7 @@ final_results <- list()
 options(timeout = 20000)
 
 for (zip_url in zip_urls) {
-  combined_df <- process_zip_file(zip_url, climate.map.dat)
+  combined_df <- process_zip_file(zip_url, climate.map.dat, local_dir)
   zip_name <- basename(zip_url)
   final_results[[zip_name]] <- combined_df
 }
