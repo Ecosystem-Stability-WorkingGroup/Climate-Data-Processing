@@ -87,6 +87,11 @@ spei.climate.dat.fin<-spei.climate.dat.full%>%
 # Close the NetCDF file after extraction
 ncdf4::nc_close(nc_file)
 
+nadat <- spei.climate.dat.fin %>% 
+  filter(is.na(month_spei))
+
+length(unique(nadat$std_id))
+length(unique(spei.climate.dat.fin$std_id))
 
 ########################################################################
 #Time Logs
@@ -94,8 +99,9 @@ time_done_spei<-Sys.time()
 
 time_done_spei - time_start
 
+
 ########################################################################
 #Save Files:
 
 #setwd(path/to/save/location)
-#write.csv(spei.climate.dat.fin, file="spei.climate.dat.fin.csv", row.names = F)
+write.csv(spei.climate.dat.fin, here("Data", "Processed_climatedata" , "spei.climate.dat.fin.csv"), row.names = F)
