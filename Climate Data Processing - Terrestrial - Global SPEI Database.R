@@ -87,6 +87,8 @@ spei.climate.dat.fin<-spei.climate.dat.full%>%
 # Close the NetCDF file after extraction
 ncdf4::nc_close(nc_file)
 
+
+## looking at the NAs
 nadat <- spei.climate.dat.fin %>% 
   filter(is.na(month_spei))
 
@@ -96,7 +98,6 @@ length(unique(spei.climate.dat.fin$std_id))
 ########################################################################
 #Time Logs
 time_done_spei<-Sys.time()
-
 time_done_spei - time_start
 
 

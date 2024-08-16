@@ -6,20 +6,12 @@
 
 ############################################################
 # Load Packages
-library(raster)
-library(sf)
-library(tidyverse)
-library(terra)
-library(fs)
-library(httr)
-library(rvest)
-library(ncdf4)
-library(progress)
+librarian::shelf(raster, sf, tidyverse, terra, fs, httr, rvest, ncdf4, progress, here, tidylog)
 
 ############################################################
 # Initial Dataframes - All Sites with Standardized IDs
 
-all.climate.terr.sites<-read.csv("C:/Users/rfidler/Desktop/Powell Ecosystem Stability/Data/All Sites - Data Harmonization/STD_ID Full Lists/all.climate.terr.sites.csv")
+all.climate.terr.sites<-read.csv(here("Data", "Climate_data", "all.climate.terr.sites.csv"))
 
 #Remove FIA Data Until Site Crosscheck
 all.climate.terr.sites<-all.climate.terr.sites%>%     
@@ -37,7 +29,7 @@ time_start<-Sys.time() #Saving Time for Reference
 
 ############################################################
 #Set Working Directory for WorldClim Data
-setwd("C:/Users/rfidler/Desktop/Powell Ecosystem Stability/Data/Climate Data/WorldClim")
+setwd(here("Data", "Climate Data" , "WorldClim"))
 
 # Read Dataframe with Coordinates
 climate.map.dat <- all.climate.terr.sites
@@ -175,6 +167,7 @@ climate.map.dat.prec.sol.wind.wat.wide<-bind_cols(
   final_results$wc2.1_30s_wind.zip[,c(6:17)],
   final_results$wc2.1_30s_vapr.zip[,c(6:17)]
 )
+
 ############################################################
 #Create Individual Total Average Dataframes: Long Format
 
