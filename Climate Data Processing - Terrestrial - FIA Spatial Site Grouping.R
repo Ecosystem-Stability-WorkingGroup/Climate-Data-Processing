@@ -78,7 +78,7 @@ new_fia_clusters<-df_with_midpoints_hclust%>%
 #Creating New Data Frame for Cross
 new_fia_clusters_for_cross<-df_with_midpoints_hclust%>%
   mutate(std_id_cluster = paste0("cluster_FIA_", spatial_group))%>%
-  dplyr::select(std_id_cluster, latitude, longitude)%>%
+  select(std_id_cluster, latitude, longitude)%>%
   distinct()
 
 #Creating Cross-Data Frame for STD_ID and STD_ID_CLUSTER Matching
@@ -93,7 +93,8 @@ final_fia_cluster_data<-new_fia_clusters%>%
          ecosystem = "Forests",
          latitude = group_lat,
          longitude = group_long)%>%
-  dplyr::select(std_id, site, ecosystem, latitude, longitude)
+  select(std_id, site, ecosystem, latitude, longitude)%>%
+  distinct()
 
 ###############################
 #Saving Files - *ENSURE VERSION HISTORY IS CORRECT - Will need for back-crossing later
