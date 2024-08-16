@@ -91,7 +91,8 @@ final_fia_cluster_data<-new_fia_clusters%>%
          ecosystem = "Forests",
          latitude = group_lat,
          longitude = group_long)%>%
-  dplyr::select(std_id, site, ecosystem, latitude, longitude)
+  dplyr::select(std_id, site, ecosystem, latitude, longitude)%>%
+  distinct()
 
 ###############################
 #Saving Files - *ENSURE VERSION HISTORY IS CORRECT - Will need for back-crossing later
