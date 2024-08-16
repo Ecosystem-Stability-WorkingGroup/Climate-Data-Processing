@@ -1,14 +1,20 @@
 ########################
-library(geosphere)
-library(data.table)
-library(sf)
-library(here)
+librarian::shelf(geosphere, data.table, sf, here, parallel, foreach, doParallel)
 
 
 ###############################
 # MAKE CSV of input data and pull inhere
 
 p.fia.grouptest<-read.csv(here("Data" , "Climate_data", "Plot_files",  "FIA.sites.with.multi.years.csv"))
+
+
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+# parallelize
+#%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+num_cores <- 12
+cl <- makeCluster(num_cores)
+registerDoParallel(cl)
 
 ###############################
 #Run Spatial Grouping
