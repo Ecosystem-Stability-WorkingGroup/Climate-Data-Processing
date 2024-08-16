@@ -27,7 +27,6 @@ all.climate.terr.sites<-all.climate.terr.sites%>%
 
 # Read Dataframe with Coordinates
 climate.map.dat <- all.climate.terr.sites
-climate.map.dat<-all.climate.terr.sites[1:50,]
 
 time_start<-Sys.time() #Saving Time for Reference
 
