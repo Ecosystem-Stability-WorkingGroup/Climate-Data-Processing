@@ -2,12 +2,13 @@
 library(geosphere)
 library(data.table)
 library(sf)
+library(here)
 
 
 ###############################
 # MAKE CSV of input data and pull inhere
 
-p.fia.grouptest<-read.csv("C:/Users/rfidler/Desktop/25km FIA csvs/FIA.sites.with.multi.years.csv")
+p.fia.grouptest<-read.csv(here("Data" , "Climate_data", "Plot_files",  "FIA.sites.with.multi.years.csv"))
 
 ###############################
 #Run Spatial Grouping
@@ -42,7 +43,7 @@ cluster_sites_hclust <- function(df, max_distance_km = 1) {
 }
 
 # Apply Hierarchical Clustering - Set Max Distance Value Here under Max_Distance_KM
-df_clustered_hclust <- cluster_sites_hclust(coords_df, max_distance_km = 5)
+df_clustered_hclust <- cluster_sites_hclust(coords_df, max_distance_km = 1)
 
 # Function to Compute Midpoints
 compute_midpoints_dt <- function(dt) {
