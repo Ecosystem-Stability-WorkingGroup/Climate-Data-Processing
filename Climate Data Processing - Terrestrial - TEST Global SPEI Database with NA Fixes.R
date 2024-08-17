@@ -10,12 +10,15 @@ librarian::shelf(raster, sf, tidyverse, terra, fs, httr, purrr, sp, rvest, ncdf4
 
 ############################################################
 # Initial Dataframes - All Sites with Standardized IDs
-setwd('/home/lemoinelab2/Documents/server-share/ryf_climate_data')
-all.climate.terr.sites<-read.csv("all.climate.terr.sites.csv")
+#setwd('/home/lemoinelab2/Documents/server-share/ryf_climate_data')
+
+all.climate.terr.sites<-read.csv(here("Data" , "Climate_data", "all.climate.terr.sites.csv"))
 
 #Remove FIA Data Until Site Crosscheck
-#all.climate.terr.sites<-all.climate.terr.sites%>%     
-#  filter(!grepl("FIA", std_id, ignore.case = TRUE))  
+all.climate.terr.sites<-all.climate.terr.sites%>%
+ filter(!grepl("FIA", std_id, ignore.case = TRUE))
+
+
 
 ########################################################################################################################
 ########################################################################################################################
@@ -36,7 +39,8 @@ spei.climate.dat<-all.climate.terr.sites
 # Set NetCDF Location
 
 # Open the NetCDF file
-nc_file <- ncdf4::nc_open(here("ryf_climate_data", "Global SPEI Database", "spei01.nc"))
+nc_file <- ncdf4::nc_open(here("Data","Climate_data", "Global SPEI Database", "spei01.nc"))
+
 
 ############################################################
 # Pulling Data from NetCDF
