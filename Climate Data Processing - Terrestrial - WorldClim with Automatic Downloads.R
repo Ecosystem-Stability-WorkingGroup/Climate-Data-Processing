@@ -175,7 +175,7 @@ for (zip_url in zip_urls) {
 
 #Total Monthly Average, Min, Max Temperature
 climate.map.dat.tav.wide<-bind_cols(
-  climate.map.dat[,c("site", "latitude", "longitude", "ecosystem")],
+  climate.map.dat[,c("std_id", "latitude", "longitude", "ecosystem")],
   final_results$wc2.1_30s_tavg.zip[,c(6:17)],
   final_results$wc2.1_30s_tmin.zip[,c(6:17)],
   final_results$wc2.1_30s_tmax.zip[,c(6:17)]
@@ -202,7 +202,7 @@ climate.map.dat.tav.long<- climate.map.dat.tav.wide %>%
 
 #Total Monthly Average Precipitation, Solar Radiation, Wind Speed, Water Vapor Pressure
 climate.map.dat.prec.sol.wind.wat.wide<-bind_cols(
-  climate.map.dat[,c("site", "latitude", "longitude", "ecosystem")],
+  climate.map.dat[,c("std_id", "latitude", "longitude", "ecosystem")],
   final_results$wc2.1_30s_prec.zip[,c(6:17)],
   final_results$wc2.1_30s_srad.zip[,c(6:17)],
   final_results$wc2.1_30s_wind.zip[,c(6:17)],
@@ -230,7 +230,7 @@ climate.map.dat.prec.sol.wind.wat.long<- climate.map.dat.prec.sol.wind.wat.wide 
 
 #Precipitation
 climate.map.dat.prec.wide<-dplyr::bind_cols(
-  climate.map.dat[,c("site", "latitude", "longitude", "ecosystem")],
+  climate.map.dat[,c("std_id", "latitude", "longitude", "ecosystem")],
   final_results$`wc2.1_cruts4.06_2.5m_prec_1960-1969.zip`[,c(6:125)],
   final_results$`wc2.1_cruts4.06_2.5m_prec_1970-1979.zip`[,c(6:125)],
   final_results$`wc2.1_cruts4.06_2.5m_prec_1980-1989.zip`[,c(6:125)],
@@ -242,7 +242,7 @@ climate.map.dat.prec.wide<-dplyr::bind_cols(
 
 #Min Temp
 climate.map.dat.tmin.wide<-dplyr::bind_cols(
-  climate.map.dat[,c("site", "latitude", "longitude", "ecosystem")],
+  climate.map.dat[,c("std_id", "latitude", "longitude", "ecosystem")],
   final_results$`wc2.1_cruts4.06_2.5m_tmin_1960-1969.zip`[,c(6:125)],
   final_results$`wc2.1_cruts4.06_2.5m_tmin_1970-1979.zip`[,c(6:125)],
   final_results$`wc2.1_cruts4.06_2.5m_tmin_1980-1989.zip`[,c(6:125)],
@@ -254,7 +254,7 @@ climate.map.dat.tmin.wide<-dplyr::bind_cols(
 
 #Max Temp
 climate.map.dat.tmax.wide<-dplyr::bind_cols(
-  climate.map.dat[,c("site", "latitude", "longitude", "ecosystem")],
+  climate.map.dat[,c("std_id", "latitude", "longitude", "ecosystem")],
   final_results$`wc2.1_cruts4.06_2.5m_tmax_1960-1969.zip`[,c(6:125)],
   final_results$`wc2.1_cruts4.06_2.5m_tmax_1970-1979.zip`[,c(6:125)],
   final_results$`wc2.1_cruts4.06_2.5m_tmax_1980-1989.zip`[,c(6:125)],
@@ -315,7 +315,7 @@ climate.map.dat.tmax.long<- climate.map.dat.tmax.wide %>%
 
 #Bioclimatic Variables, Elevation
 climate.map.dat.bioclim.wide<-dplyr::bind_cols(
-  climate.map.dat[,c("site", "latitude", "longitude", "ecosystem")],
+  climate.map.dat[,c("std_id", "latitude", "longitude", "ecosystem")],
   final_results$wc2.1_30s_bio.zip[,c(6:24)],
   final_results$wc2.1_30s_elev.zip[,c(6)]
 )%>%
@@ -339,7 +339,7 @@ climate.map.dat.bioclim.wide<-dplyr::bind_cols(
          prec_warmest_q_70_00 = wc2.1_30s_bio_18,
          prec_coldest_q_70_00 = wc2.1_30s_bio_19,
          elevation = ...24)%>%
-  dplyr::select(site, latitude, longitude, ecosystem,
+  dplyr::select(std_id, latitude, longitude, ecosystem,
                 annual_mean_temp_70_00, mean_diurnal_range_70_00, isothermality_70_00,
                 temp_seasonality_70_00, tmax_warmest_m_70_00, tmin_coldest_m_70_00, temp_ann_range_70_00,
                 tavg_wettest_q_70_00, tavg_driest_q_70_00, tavg_warmest_q_70_00, tavg_coldest_q_70_00,
@@ -353,7 +353,7 @@ climate.map.dat.bioclim.wide<-dplyr::bind_cols(
 #Bioclimatic Variables, Elevation
 climate.map.dat.bioclim.long<-climate.map.dat.bioclim.wide%>%
   pivot_longer(
-    cols = -c(site, ecosystem, latitude, longitude),
+    cols = -c(std_id, ecosystem, latitude, longitude),
     names_to = "variable",
     values_to = "value"
   )
