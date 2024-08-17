@@ -109,7 +109,7 @@ extract_nc_data <- function(file_url, latitudes, longitudes) {
       return(nn)
   }
 
-  res = unlist(mclapply(na_indices[1:10], d_func, var_data, nearest_idx, lat_idx1, lon_idx1))
+  res = unlist(mclapply(na_indices, d_func, var_data, nearest_idx, lat_idx1, lon_idx1))
   extracted_data[na_indices] = res
   # Close the .nc file
   nc_close(nc)

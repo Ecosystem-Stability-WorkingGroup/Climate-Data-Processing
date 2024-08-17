@@ -49,7 +49,10 @@ cluster_sites_hclust <- function(df, max_distance_km = 1) {
 }
 
 # Apply Hierarchical Clustering - Set Max Distance Value Here under Max_Distance_KM
-df_clustered_hclust <- cluster_sites_hclust(coords_df, max_distance_km = 1)
+library(parallel)
+ncores = detectCores()
+chunks =  split(coords_df, (seq(nrow(coords_df))-1) %/% ncores) 
+df_clustered_hclust <- mclapply(chunks, cluster_sites_hclust, 1)
 
 # Function to Compute Midpoints
 compute_midpoints_dt <- function(dt) {
@@ -65,37 +68,42 @@ compute_midpoints_dt <- function(dt) {
 }
 
 # Compute Midpoints
-df_with_midpoints_hclust <- compute_midpoints_dt(df_clustered_hclust)
+library(dplyr)# have to wait to load due to conflicts with data.table
+df_with_midpoints_hclust <- bind_rows(mclapply(df_clustered_hclust, compute_midpoints_dt))
 
 ###############################
 #Assign New IDs and Cross with Original STD_IDs for Later Use
 #NOTE:: Need to adjust this code if running in batches 
 #Cluster values will be repeated if running in batches - save files individually and provide unique STD_ID_CLUSTER values
 
-library(dplyr)# have to wait to load due to conflicts with data.table
 
 #Creating New Data Frame
 new_fia_clusters<-df_with_midpoints_hclust%>%
+  mutate(std_id_cluster = paste0("cluster_FIA_", spatial_group))
+
+#Creating New Data Frame for Cross
+new_fia_clusters_for_cross<-df_with_midpoints_hclust%>%
   mutate(std_id_cluster = paste0("cluster_FIA_", spatial_group))%>%
   select(std_id_cluster, latitude, longitude)%>%
   distinct()
 
 #Creating Cross-Data Frame for STD_ID and STD_ID_CLUSTER Matching
-cluster_std_id_cross<-p.fia.grouptest[175001:205629,]%>%
-  left_join(new_fia_clusters, by = c("latitude", "longitude"))
+cluster_std_id_cross<-p.fia.grouptest%>%
+  left_join(new_fia_clusters_for_cross, by = c("latitude", "longitude"))
 
 
 #Creating Final Data Frame for Climate Processing
-final_fia_cluster_data<-df_with_midpoints_hclust%>%
+final_fia_cluster_data<-new_fia_clusters%>%
   mutate(std_id = std_id_cluster,
          site = "fia_clustered_site",
          ecosystem = "Forests",
          latitude = group_lat,
          longitude = group_long)%>%
-  select(std_id, site, ecosystem, latitude, longitude)
+  select(std_id, site, ecosystem, latitude, longitude)%>%
+  distinct()
 
 ###############################
 #Saving Files - *ENSURE VERSION HISTORY IS CORRECT - Will need for back-crossing later
 
-#write.csv(cluster_std_id_cross, file = "FIA.STD_ID.STD_ID_CLUSTER.Crosses.V1.DD.MM.YYYY.csv")
-#write.csv(final_fia_cluster_data, file = "FIA.STD_ID_CLUSTER.Values.V1.DD.MM.YYYY.csv")
+write.csv(cluster_std_id_cross, file = "FIA.STD_ID.STD_ID_CLUSTER.Crosses.V1.16.08.2024.csv")
+write.csv(final_fia_cluster_data, file = "FIA.STD_ID_CLUSTER.Values.V1.16.08.2024.csv")
