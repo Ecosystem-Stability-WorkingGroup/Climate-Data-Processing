@@ -29,4 +29,8 @@ data_dir <- "/Users/treelife/Library/CloudStorage/GoogleDrive-dudney@ucsb.edu/My
 createLink(paste0(code_dir, '/Remote'), data_dir, overwrite = FALSE)
 
 
+## testing to see how slow the network is
 test <- read_csv(here("Data", "Remote", "Climate Data", "spei.climate.dat.fin.csv"))
+
+
+
